@@ -1,7 +1,8 @@
 import jsonlines
 import os
 import matplotlib.pyplot as plt
-import nltk
+import tensorflow_hub as hub
+from official.nlp.bert import tokenization
 
 def main():
 
@@ -16,6 +17,14 @@ def main():
 
     # create jsonlines reader
     with jsonlines.open(os.path.join(dir_path, file_name)) as reader:
+        # BERT layer and tokenizer
+        hub_handle = 'https://tfhub.dev/tensorflow/bert_en_uncased_L-12_H-768_A-12/4'
+        bert_layer = hub.KerasLayer(hub_handle, trainable=False)
+
+        vocab_file = bert_layer.resolved_object.vocab_file.asset_path.numpy()
+        do_lower_case = bert_layer.resolved_object.do_lower_case.numpy() # checks if the bert layer is uncased or not
+        tokenizer = tokenization.FullTokenizer(vocab_file, do_lower_case)
+
         for obj in reader:
             # remove ' "" '
             obj["context"] = ' '.join(obj["context"])
@@ -41,7 +50,8 @@ def main():
 
             
             # delete lines sequence length larger than bert can handle
-            if (len(nltk.word_tokenize(obj["context"]))) > 300: continue
+            if (len(tokenizer.wordpiece_tokenizer.tokenize(obj["context"]))) >= 499: continue
+            
 
             # assign number to idiomatic and literal lines
             num = 0
