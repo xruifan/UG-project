@@ -1,6 +1,7 @@
 import jsonlines
 import os
 import matplotlib.pyplot as plt
+import nltk
 
 def main():
 
@@ -40,7 +41,7 @@ def main():
 
             
             # delete lines sequence length larger than bert can handle
-            if len(obj["context"].split()) > 500: continue
+            if (len(nltk.word_tokenize(obj["context"]))) > 300: continue
 
             # assign number to idiomatic and literal lines
             num = 0
