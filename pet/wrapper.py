@@ -355,9 +355,13 @@ class TransformerModelWrapper:
         eval_batch_size = per_gpu_eval_batch_size * max(1, n_gpu)
         eval_sampler = SequentialSampler(eval_dataset)
         eval_dataloader = DataLoader(eval_dataset, sampler=eval_sampler, batch_size=eval_batch_size)
-
-        if n_gpu > 1:
-            self.model = torch.nn.DataParallel(self.model)
+        
+        """
+        Fix multiple GPUs training issue.  --Xuan-Rui Fan
+        See details: https://github.com/timoschick/pet/issues/33
+        """
+        #if n_gpu > 1:
+        #    self.model = torch.nn.DataParallel(self.model)
 
         preds = None
         all_indices, out_label_ids, question_ids = None, None, None
