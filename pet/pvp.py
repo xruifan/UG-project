@@ -647,20 +647,20 @@ class MyTaskPVP(PVP):
         # For each pattern_id, we define the corresponding pattern and return a pair of text a and text b (where text b
         # can also be empty).
         if self.pattern_id == 0:
-            # this corresponds to the pattern a, the sentence is [MASK].
-            return [text_a, ', the sentence is', self.mask, '.'], []
+            # this corresponds to the pattern a the sentence is [MASK].
+            return [text_a, 'The sentence is ', self.mask, '.'], []
 
         elif self.pattern_id == 1:
             # this corresponds to the pattern a: [MASK]
-            return [text_a, ':', self.mask], []
+            return [text_a, ' : ', self.mask], []
 
         elif self.pattern_id == 2:
-            # this corresponds to the pattern The following sentence is [MASK], a
-            return ['The following sentence is ', self.mask, ',', text_a], []
+            # this corresponds to the pattern The following sentence is [MASK]. a
+            return ['The following sentence is ', self.mask, '. ', text_a], []
 
         elif self.pattern_id == 3:
             # this corresponds to the pattern ([MASK]) a
-            return ['(', self.mask, ')', text_a], []
+            return ['(', self.mask, ') ', text_a], []
         
         else:
             raise ValueError("No pattern implemented for id {}".format(self.pattern_id))
