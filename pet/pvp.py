@@ -617,7 +617,57 @@ class RecordPVP(PVP):
     def verbalize(self, label) -> List[str]:
         return []
 
+class MyTaskPVP(PVP):
+    """
+    Example for a pattern-verbalizer pair (PVP).
+    """
 
+    # Set this to the name of the task
+    TASK_NAME = 'idiom-detection'
+
+    # Set this to the verbalizer for the given task: a mapping from the task's labels (which can be obtained using
+    # the corresponding DataProcessor's get_labels method) to tokens from the language model's vocabulary
+    VERBALIZER = {
+        "l": ["literal"],
+        "i": ["phrase"]
+    }
+    
+
+    def get_parts(self, example: InputExample):
+        """
+        This function defines the actual patterns: It takes as input an example and outputs the result of applying a
+        pattern to it. To allow for multiple patterns, a pattern_id can be passed to the PVP's constructor. This
+        method must implement the application of all patterns.
+        """
+
+        # We tell the tokenizer that text_a can be truncated if the resulting sequence is longer than
+        # our language model's max sequence length.
+        text_a = self.shortenable(example.text_a)
+
+        # For each pattern_id, we define the corresponding pattern and return a pair of text a and text b (where text b
+        # can also be empty).
+        if self.pattern_id == 0:
+            # this corresponds to the pattern a, the sentence is [MASK].
+            return [text_a, ', the sentence is', self.mask, '.'], []
+
+        elif self.pattern_id == 1:
+            # this corresponds to the pattern a: [MASK]
+            return [text_a, ':', self.mask], []
+
+        elif self.pattern_id == 2:
+            # this corresponds to the pattern The following sentence is [MASK], a
+            return ['The following sentence is ', self.mask, ',', text_a], []
+
+        elif self.pattern_id == 3:
+            # this corresponds to the pattern ([MASK]) a
+            return ['(', self.mask, ')', text_a], []
+        
+        else:
+            raise ValueError("No pattern implemented for id {}".format(self.pattern_id))
+
+    def verbalize(self, label) -> List[str]:
+        return MyTaskPVP.VERBALIZER[label]
+        
 PVPS = {
     'agnews': AgnewsPVP,
     'mnli': MnliPVP,
@@ -637,4 +687,5 @@ PVPS = {
     'record': RecordPVP,
     'ax-b': RtePVP,
     'ax-g': RtePVP,
+    'idiom-detection': MyTaskPVP,
 }
