@@ -25,7 +25,8 @@ def main():
         do_lower_case = bert_layer.resolved_object.do_lower_case.numpy() # checks if the bert layer is uncased or not
         tokenizer = tokenization.FullTokenizer(vocab_file, do_lower_case)
 
-        for obj in reader:
+        
+        for num, obj in enumerate(reader):
             # remove ' "" '
             obj["context"] = ' '.join(obj["context"])
             # remove \n
@@ -54,7 +55,6 @@ def main():
             
 
             # assign number to idiomatic and literal lines
-            num = 0
             if obj["label"] == 'i':
                 obj["no."] = num
                 idiomatic.append(obj)
