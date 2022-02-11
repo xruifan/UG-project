@@ -1,2 +1,0 @@
-#!/bin/sh
-python3 ../cli.py --method pet --task_name idiom-detection --pattern_ids 0 1 2 3 --data_dir ../magpie-corpus-master --model_type bert --model_name_or_path bert-base-uncased --output_dir ./pet-bert-0-100 --do_eval --train_examples 0 --split_examples_evenly
