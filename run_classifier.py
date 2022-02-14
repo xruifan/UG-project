@@ -25,10 +25,10 @@ class Run:
         self.config = { 'model_name': 'bert_idiom_finetuned',
                         'label_list' : [0, 1], 
                         'max_seq_length' : 500, # maximum length of (token) input sequences
-                        'learning_rate': 1e-5,
-                        'epochs': 4,
+                        'learning_rate': 3e-5,
+                        'epochs': 3,
                         'optimizer': 'adam',
-                        'regularization_penalty': 8e-5,
+                        'regularization_penalty': 7e-4,
                         'train_batch': 2,
                         'dev_batch': 8,
                         'test_batch': 8,
