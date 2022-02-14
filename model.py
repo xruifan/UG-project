@@ -5,6 +5,7 @@ Date: 13 Feb 2022
 """
 import tensorflow as tf
 import tensorflow_hub as hub
+import os
 
 import matplotlib.pyplot as plt
 
@@ -47,28 +48,28 @@ class Model:
         return model
 
     @staticmethod
-    def create_graphs(history):
+    def create_graphs(history, results_folder_path):
         train_accuracy = history.history['binary_accuracy']
-        val_accuracy = history.history['val_binary_accuracy'],
-        train_losses = history.history['loss'],
+        val_accuracy = history.history['val_binary_accuracy']
+        train_losses = history.history['loss']
         val_losses = history.history['val_loss']
-        f1 = plt.figure(0)
+        f1 = plt.figure()
         plt.plot(train_accuracy)
         plt.plot(val_accuracy)
         plt.legend(['Training Accuracy', 'Validation Accuracy'], fontsize=18)
         plt.xlabel('Epochs ', fontsize=16)
         plt.ylabel('Accuracy', fontsize=16)
         plt.title('Accuracy Curves', fontsize=16)
-        plt.savefig('Accuracy.png')
+        plt.savefig(os.path.join(results_folder_path,'accuracy.png'))
         plt.show()
         
-        f2 = plt.figure(1)
+        f2 = plt.figure()
         plt.plot(train_losses)
         plt.plot(val_losses)
         plt.legend(['Training loss', 'Validation Loss'], fontsize=18)
         plt.xlabel('Epochs ', fontsize=16)
         plt.ylabel('Loss', fontsize=16)
         plt.title('Loss Curves', fontsize=16)
-        plt.savefig('Loss.png')
+        plt.savefig(os.path.join(results_folder_path,'loss.png'))
         plt.show()
         
