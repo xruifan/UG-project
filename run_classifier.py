@@ -28,7 +28,7 @@ class Run:
                         'learning_rate': 3e-5,
                         'epochs': 3,
                         'optimizer': 'adam',
-                        'regularization_penalty': 7e-4,
+                        'regularization_penalty': 6e-4,
                         'train_batch': 2,
                         'dev_batch': 8,
                         'test_batch': 8,
