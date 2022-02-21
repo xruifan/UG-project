@@ -3,6 +3,7 @@ import os
 import matplotlib.pyplot as plt
 import tensorflow_hub as hub
 from official.nlp.bert import tokenization
+import random
 
 def main():
 
@@ -89,6 +90,9 @@ def main():
     dev = dev_i + dev_l
     test = test_i + test_l
     
+    random.shuffle(train)
+    random.shuffle(dev)
+    random.shuffle(test)
     
     print("train size:%i dev size: %i test size: %i" % (len(train), len(dev), len(test)))
     
