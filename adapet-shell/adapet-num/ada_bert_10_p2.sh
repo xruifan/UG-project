@@ -1,0 +1,2 @@
+source /home/acb19lh/diss21/ADAPET-master/bin/setup.sh
+python cli.py --data_dir /home/acb19lh/diss21/ADAPET-master/magpie-corpus-master/10/ --pattern 'The following sentence is [LBL]. [TEXT1]' --dict_verbalizer '{"l": "literal", "i": "phrase"}'
