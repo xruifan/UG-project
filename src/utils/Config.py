@@ -66,9 +66,9 @@ class Config(object):
         '''
         Updates the config default values based on parameters passed in from config file
         '''
-
-
-        self.base_dir = os.path.join("exp_out", self.dataset, self.pretrained_weight)
+        
+        # Changed path to absolute path
+        self.base_dir = os.path.join("/data/acb19lh/adapet", self.dataset, self.pretrained_weight)
         if self.exp_name != "":
             self.base_dir = os.path.join(self.base_dir, self.exp_name)
 
