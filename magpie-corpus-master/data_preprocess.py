@@ -116,7 +116,7 @@ def main():
             random.shuffle(train)
             w.write_all(train)
 
-        with jsonlines.open(os.path.join(dir_path,curr_dir_path,"dev.jsonl"), mode="w") as w:
+        with jsonlines.open(os.path.join(dir_path,curr_dir_path,"val.jsonl"), mode="w") as w:
             w.write_all(dev)
         
         with jsonlines.open(os.path.join(dir_path,curr_dir_path,"test.jsonl"), mode="w") as w:
@@ -133,7 +133,7 @@ def main():
             random.shuffle(train)
             w.write_all(train)
 
-        with jsonlines.open(os.path.join(dir_path,curr_dir_path,"dev.jsonl"), mode="w") as w:
+        with jsonlines.open(os.path.join(dir_path,curr_dir_path,"val.jsonl"), mode="w") as w:
             w.write_all(dev)
         
         with jsonlines.open(os.path.join(dir_path,curr_dir_path,"test.jsonl"), mode="w") as w:
