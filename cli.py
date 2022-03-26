@@ -16,10 +16,11 @@ if __name__ == '__main__':
     parser.add_argument('-v', "--dict_verbalizer", type=json.loads, default=None, help="Dictionary mapping label name (in dataset) to the verbalizer to use, e.g. '{\"0\": \"Yes\", \"1\": \"No\"}'")
 
     # Model and training hyperparams
+    # Changed hyperparams    Xuan-Rui Fan
     parser.add_argument('-w', '--pretrained_weight', type=str, default='bert-base-uncased', help='Pretrained model weights from huggingface')
-    parser.add_argument('-bs', '--batch_size', type=int, default=1, help='batch size during training')
+    parser.add_argument('-bs', '--batch_size', type=int, default=4, help='batch size during training')
     parser.add_argument('--eval_batch_size', type=int, default=1, help='batch size during evaluation')
-    parser.add_argument('--grad_accumulation_factor', type=int, default=16, help='number of gradient accumulation steps')
+    parser.add_argument('--grad_accumulation_factor', type=int, default=2, help='number of gradient accumulation steps')
     parser.add_argument('--num_batches', type=int, default=1000, help='number of batches for experiment; 1 batch = grad_accumulation_factor x batch_size')
     parser.add_argument('--eval_every', type=int, default=250, help='number of training batches per evaluation')
     parser.add_argument('--max_text_length', type=int, default=512, help='maximum total input sequence length after tokenization for ADAPET')
