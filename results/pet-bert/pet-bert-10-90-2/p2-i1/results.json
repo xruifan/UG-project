@@ -1,1 +1,0 @@
-{"train_set_before_training": 0.49377593360995853, "global_step": 251, "average_loss": 0.632543484468859, "train_set_after_training": 0.7655601659751037, "test_set_after_training": {"acc": 0.7157676348547718}}
