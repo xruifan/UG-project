@@ -3,6 +3,7 @@ import os
 import matplotlib.pyplot as plt
 import tensorflow_hub as hub
 from official.nlp.bert import tokenization
+import random
 
 def main():
 
@@ -18,7 +19,7 @@ def main():
     # create jsonlines reader
     with jsonlines.open(os.path.join(dir_path, file_name)) as reader:
         # BERT layer and tokenizer
-        hub_handle = 'https://tfhub.dev/tensorflow/bert_en_uncased_L-12_H-768_A-12/4'
+        hub_handle = 'https://tfhub.dev/tensorflow/bert_en_uncased_L-12_H-768_A-12/2'
         bert_layer = hub.KerasLayer(hub_handle, trainable=False)
 
         vocab_file = bert_layer.resolved_object.vocab_file.asset_path.numpy()
@@ -26,7 +27,7 @@ def main():
         tokenizer = tokenization.FullTokenizer(vocab_file, do_lower_case)
 
         
-        for num, obj in enumerate(reader):
+        for obj in reader:
             # remove ' "" '
             obj["context"] = ' '.join(obj["context"])
             # remove \n
@@ -53,16 +54,26 @@ def main():
             # delete lines sequence length larger than bert can handle
             if (len(tokenizer.wordpiece_tokenizer.tokenize(obj["context"]))) >= 499: continue
             
+            # remove unused keys
+            obj.pop('confidence', None)
+            obj.pop('document_id', None)
+            obj.pop('genre', None)
+            obj.pop('id', None)
+            obj.pop('idiom', None)
+            obj.pop('judgment_count', None)
+            obj.pop('label_distribution', None)
+            obj.pop('non_standard_usage_explanations', None)
+            obj.pop('offsets', None)
+            obj.pop('sentence_no', None)
+            obj.pop('split', None)
+            obj.pop('variant_type', None)
 
             # assign number to idiomatic and literal lines
             if obj["label"] == 'i':
-                obj["no."] = num
-                idiomatic.append(obj)
-                num+= 1
+                idiomatic.append({"TEXT1":obj["context"],"LBL":"i"})
+
             elif obj["label"] == 'l':
-                obj["no."] = num
-                literal.append(obj)
-                num+= 1
+                literal.append({"TEXT1":obj["context"],"LBL":"l"})
             else: 
                 print(obj["label"])
 
@@ -85,22 +96,33 @@ def main():
     dev_l = literal[int(len(literal)*0.8):int(len(literal)*0.9)] 
     test_l = literal[int(len(literal)*0.9):] 
 
-    train = train_i + train_l
     dev = dev_i + dev_l
     test = test_i + test_l
-    
-    
-    print("train size:%i dev size: %i test size: %i" % (len(train), len(dev), len(test)))
-    
-    # write jsonl files
-    with jsonlines.open(os.path.join(dir_path,"train.jsonl"), mode="w") as w:
-        w.write_all(train)
 
-    with jsonlines.open(os.path.join(dir_path,"dev.jsonl"), mode="w") as w:
-        w.write_all(dev)
+    # shuffle lists
+    random.shuffle(dev)
+    random.shuffle(test)
     
-    with jsonlines.open(os.path.join(dir_path,"test.jsonl"), mode="w") as w:
-        w.write_all(test)
+    print("train size:%i dev size: %i test size: %i" % (len(train_i + train_l), len(dev), len(test)))
+
+    #prepare data for num
+    num_list = [10,100,500,1000,2500,5000,7500,10000,12500,15000,17500,19280]
+    for num in num_list:
+        curr_dir_path = '{n}'.format(n=num)
+        os.makedirs(curr_dir_path)
+        # write jsonl files
+        with jsonlines.open(os.path.join(dir_path,curr_dir_path,"train.jsonl"), mode="w") as w:
+            train = train_i[:num//2] + train_l[:num//2]
+            random.shuffle(train)
+            w.write_all(train)
+
+        with jsonlines.open(os.path.join(dir_path,curr_dir_path,"dev.jsonl"), mode="w") as w:
+            w.write_all(dev)
+        
+        with jsonlines.open(os.path.join(dir_path,curr_dir_path,"test.jsonl"), mode="w") as w:
+            w.write_all(test)
+
+
 
     # ratio of idiom and literal figure
     activities = ['idiomatic', 'literal']
@@ -114,7 +136,7 @@ def main():
 
     # ratio of train, dev and test figure 
     left = [1, 2, 3]
-    height = [len(train), len(dev), len(test)]
+    height = [len(train_i + train_l), len(dev), len(test)]
     label = ['train', 'dev', 'test']
     plt.bar(left, height, tick_label=label, width=0.8)
     plt.ylabel('data size')
