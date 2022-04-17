@@ -6,6 +6,8 @@ Date: 13 Feb 2022
 import os
 import pandas as pd
 import json
+import random
+
 import tensorflow as tf
 from tensorflow import data
 from official.nlp.data import classifier_data_lib
@@ -22,21 +24,25 @@ class DataProcessor:
         self.tokenizer = tokenizer
 
     # a function that reads data
-    def create_examples(self, path):
+    def create_examples(self, path, shuffle):
         data = []
         with open(path, encoding='utf8') as f:
-            for line in f:
+            for i, line in enumerate(f):
                 example_json = json.loads(line)
-                label = example_json['label']
+                label = example_json['LBL']
                 # literal = 0, idiomatic = 1
                 if (label == 'l'):
                     label = 0
                 else:
                     label = 1
-                id = example_json['no.']
-                text = example_json['context']
+                id = i
+                text = example_json['TEXT1']
 
                 data.append([id,text,label])
+
+        if shuffle:
+            seed = 42
+            random.Random(seed).shuffle(data)
 
         return pd.DataFrame(data=data, columns=['id','text','label'])
 
@@ -79,28 +85,22 @@ class DataProcessor:
         return (x, label_id)
 
     # apply the transformation to batch dataset
-    def trans_data(self, input_data, batch, shuffle):
-        if (shuffle):
-            input_data = (input_data.map(self.create_feature_map,
-                                        num_parallel_calls=data.experimental.AUTOTUNE)
-                                    .shuffle(10000)
-                                    .batch(batch, drop_remainder=False)
-                                    .prefetch(data.experimental.AUTOTUNE))
-        else: 
-            input_data = (input_data.map(self.create_feature_map,
-                                        num_parallel_calls=data.experimental.AUTOTUNE)
-                                    .batch(batch, drop_remainder=False)
-                                    .prefetch(data.experimental.AUTOTUNE))
+    def trans_data(self, input_data, batch):
+
+        input_data = (input_data.map(self.create_feature_map,
+                                    num_parallel_calls=data.experimental.AUTOTUNE)
+                                .batch(batch, drop_remainder=False)
+                                .prefetch(data.experimental.AUTOTUNE))
         return input_data
 
-    def get_data(self):
+    def get_data(self, shuffle=True):
         # read the data
-        train_df = self.create_examples(os.path.join(self.data_dir, self.TRAIN_FILE_NAME))
-        dev_df = self.create_examples(os.path.join(self.data_dir, self.DEV_FILE_NAME))
-        test_df = self.create_examples(os.path.join(self.data_dir, self.TEST_FILE_NAME))
+        train_df = self.create_examples(os.path.join(self.data_dir, self.TRAIN_FILE_NAME),shuffle)
+        dev_df = self.create_examples(os.path.join(self.data_dir, self.DEV_FILE_NAME),shuffle)
+        test_df = self.create_examples(os.path.join(self.data_dir, self.TEST_FILE_NAME),False)
 
         train_data = data.Dataset.from_tensor_slices((train_df['text'].values, train_df['label'].values))
         dev_data = data.Dataset.from_tensor_slices((dev_df['text'].values, dev_df['label'].values))
         test_data = data.Dataset.from_tensor_slices((test_df['text'].values, test_df['label'].values))
         
-        return self.trans_data(train_data, self.config['train_batch'], True), self.trans_data(dev_data, self.config['dev_batch'], True), self.trans_data(test_data, self.config['test_batch'], False)
+        return self.trans_data(train_data, self.config['train_batch']), self.trans_data(dev_data, self.config['dev_batch']), self.trans_data(test_data, self.config['test_batch'])
