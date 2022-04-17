@@ -642,7 +642,7 @@ class MyTaskPVP(PVP):
 
         # We tell the tokenizer that text_a can be truncated if the resulting sequence is longer than
         # our language model's max sequence length.
-        text_a = self.shortenable(example.text_a)
+        text_a = example.text_a
 
         # For each pattern_id, we define the corresponding pattern and return a pair of text a and text b (where text b
         # can also be empty).
