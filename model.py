@@ -34,8 +34,7 @@ class Model:
         # only use pooled-output for classification 
         pooled_output, sequence_output = self.bert_layer([input_word_ids, input_mask, input_type_ids])
         
-        regularizer = tf.keras.layers.ActivityRegularization(l1=self.config['regularization_penalty'])(pooled_output)
-        output = tf.keras.layers.Dense(1, activation='sigmoid', name='output')(regularizer)
+        output = tf.keras.layers.Dense(1, activation='sigmoid', name='output')(pooled_output)
 
         # inputs coming from the function
         model = tf.keras.Model(
