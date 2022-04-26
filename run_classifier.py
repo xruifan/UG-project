@@ -80,7 +80,6 @@ class Run:
         model.summary()
 
         # callbacks
-        #checkpoint = ModelCheckpoint(os.path.dirname(os.path.abspath(__file__)), monitor='val_loss', verbose=1, save_best_only=True, mode='max')
         early_stopping = EarlyStopping(monitor='val_loss', patience=2),
         callbacks_list = [early_stopping]
 
