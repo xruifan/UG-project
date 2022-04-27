@@ -104,26 +104,9 @@ def main():
     random.shuffle(test)
     
     print("train size:%i dev size: %i test size: %i" % (len(train_i + train_l), len(dev), len(test)))
-    
-    # prepare data for ratio
-    ratio_list = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
-    for ratio in ratio_list:
-        curr_dir_path = '{p}%'.format(p=ratio)
-        os.makedirs(curr_dir_path)
-        # write jsonl files
-        with jsonlines.open(os.path.join(dir_path,curr_dir_path,"train.jsonl"), mode="w") as w:
-            train = train_i[:int(len(train_i)*ratio/100)] + train_l[:int(len(train_l)*ratio/100)]
-            random.shuffle(train)
-            w.write_all(train)
-
-        with jsonlines.open(os.path.join(dir_path,curr_dir_path,"val.jsonl"), mode="w") as w:
-            w.write_all(dev)
-        
-        with jsonlines.open(os.path.join(dir_path,curr_dir_path,"test.jsonl"), mode="w") as w:
-            w.write_all(test)
 
     #prepare data for num
-    num_list = [10, 50, 100, 250, 500, 1000]
+    num_list = [10,100,500,1000,2500,5000,7500,10000,12500,15000,17500,19280]
     for num in num_list:
         curr_dir_path = '{n}'.format(n=num)
         os.makedirs(curr_dir_path)
@@ -133,7 +116,7 @@ def main():
             random.shuffle(train)
             w.write_all(train)
 
-        with jsonlines.open(os.path.join(dir_path,curr_dir_path,"val.jsonl"), mode="w") as w:
+        with jsonlines.open(os.path.join(dir_path,curr_dir_path,"dev.jsonl"), mode="w") as w:
             w.write_all(dev)
         
         with jsonlines.open(os.path.join(dir_path,curr_dir_path,"test.jsonl"), mode="w") as w:
