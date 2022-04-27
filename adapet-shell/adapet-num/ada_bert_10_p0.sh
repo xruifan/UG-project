@@ -1,2 +1,11 @@
 source /home/acb19lh/diss21/ADAPET-master/bin/setup.sh
-python cli.py --data_dir /home/acb19lh/diss21/ADAPET-master/magpie-corpus-master/10/ --pattern '[TEXT1], The sentence is [LBL].' --dict_verbalizer '{"l": "literal", "i": "phrase"}'
+python $ADAPET_ROOT/cli.py \
+--data_dir $ADAPET_ROOT/magpie-corpus-master/10/ \
+--pattern '[TEXT1], The sentence is [LBL].' \
+--dict_verbalizer '{"l": "literal", "i": "phrase"}' \
+--eval_every 2 \
+--max_text_length 512 \
+--batch_size 2 \
+--eval_batch_size 4 \
+--grad_accumulation_factor 8 \
+--num_batches 2
