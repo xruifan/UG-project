@@ -8,6 +8,7 @@ from src.train import train
 
 if __name__ == '__main__':
     
+    # Changed working folder     --Xuan-Rui Fan
     os.chdir('/home/acb19lh/diss21/ADAPET-master/')
 
     parser = argparse.ArgumentParser()
@@ -18,7 +19,7 @@ if __name__ == '__main__':
     parser.add_argument('-v', "--dict_verbalizer", type=json.loads, default=None, help="Dictionary mapping label name (in dataset) to the verbalizer to use, e.g. '{\"0\": \"Yes\", \"1\": \"No\"}'")
 
     # Model and training hyperparams
-    # Changed hyperparams    Xuan-Rui Fan
+    # Changed hyperparams    --Xuan-Rui Fan
     parser.add_argument('-w', '--pretrained_weight', type=str, default='bert-base-uncased', help='Pretrained model weights from huggingface')
     parser.add_argument('-bs', '--batch_size', type=int, default=4, help='batch size during training')
     parser.add_argument('--eval_batch_size', type=int, default=1, help='batch size during evaluation')
