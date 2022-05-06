@@ -1,5 +1,5 @@
 source /home/acb19lh/diss21/ADAPET-master/bin/setup.sh
-python $ADAPET_ROOT/cli.py /
+python $ADAPET_ROOT/cli.py \
 --data_dir $ADAPET_ROOT/magpie-corpus-master/100/ \
 --pattern '[TEXT1] : [LBL]' \
 --dict_verbalizer '{"l": "literal", "i": "phrase"}' \
