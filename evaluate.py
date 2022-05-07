@@ -11,8 +11,8 @@ from sklearn.metrics import f1_score
 import os
 
 if __name__ == '__main__':
-    model_path = '/data/acb19lh/adapet/generic/bert-base-uncased/'
-    eval_path = '/home/acb19lh/diss21/ADAPET-master/magpie-corpus-master/10/'
+    model_path = '/home/acb19lh/adapet/generic/bert-base-uncased/'
+    eval_path = '/home/acb19lh/diss21/ADAPET-master/magpie-corpus-master/19280/'
     
     p0 = '[TEXT1], The sentence is [LBL].'
     p1 = '[TEXT1] : [LBL]'
